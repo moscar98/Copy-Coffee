@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Copy &amp; Coffee · Transferencia</title>
+    <meta name="description"
+        content="Datos de transferencia bancaria de Copy & Coffee — Centro de fotocopiado, papelería y café.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Favicon (mantiene la estética de marca en la pestaña del navegador) -->
+    <link rel="icon" href="img/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon-180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --paper: #ece3d2;
+            /* fondo tipo papel kraft */
+            --card: #fffdf8;
+            /* papel de la boleta */
+            --ink: #1d1811;
+            /* negro tinta / espresso */
+            --ink-soft: #6d6252;
+            /* texto secundario, cálido */
+            --line: #ddd1b6;
+            /* líneas punteadas / perforado */
+            --accent: #a2632f;
+            /* terracota tostado (acento único) */
+            --accent-ink: #7c4a24;
+            --cyan: #4f9fae;
+            --magenta: #b8497b;
+            --yellow: #d3a23e;
+            --radius-card: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--paper);
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(29, 24, 17, .05) 1px, transparent 0);
+            background-size: 18px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px 56px;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+        }
+
+        /* ── Franja de calibración (guiño a la impresión, único toque de color) ── */
+        .calibration {
+            display: flex;
+            width: 100%;
+            max-width: 360px;
+            height: 9px;
+            border-radius: 2px;
+            overflow: hidden;
+            transform: rotate(-1.1deg);
+            box-shadow: 0 3px 8px rgba(29, 24, 17, .18);
+            margin-bottom: 14px;
+        }
+
+        .calibration span {
+            flex: 1;
+        }
+
+        .calibration span:nth-child(1) {
+            background: var(--cyan);
+        }
+
+        .calibration span:nth-child(2) {
+            background: var(--magenta);
+        }
+
+        .calibration span:nth-child(3) {
+            background: var(--yellow);
+        }
+
+        .calibration span:nth-child(4) {
+            background: var(--ink);
+        }
+
+        /* ── Envoltorio de la boleta (tarjeta + borde cortado) ── */
+        .ticket {
+            max-width: 400px;
+            width: 100%;
+            filter:
+                drop-shadow(0 20px 28px rgba(29, 24, 17, .16)) drop-shadow(0 4px 10px rgba(29, 24, 17, .10));
+        }
+
+        /* ── Tarjeta / boleta ── */
+        .card {
+            position: relative;
+            background: var(--card);
+            width: 100%;
+            padding: 38px 30px 28px;
+            border-radius: var(--radius-card) var(--radius-card) 0 0;
+            text-align: center;
+        }
+
+        /* Borde inferior "cortado" tipo boleta térmica (sierra continua, sin JS) */
+        .card-tear {
+            width: 100%;
+            height: 16px;
+            background: var(--card);
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2216%22%20viewBox%3D%220%200%2020%2016%22%3E%3Cpolygon%20points%3D%220%2C0%2020%2C0%2010%2C16%22%20fill%3D%22%23000%22/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2216%22%20viewBox%3D%220%200%2020%2016%22%3E%3Cpolygon%20points%3D%220%2C0%2020%2C0%2010%2C16%22%20fill%3D%22%23000%22/%3E%3C/svg%3E");
+            -webkit-mask-repeat: repeat-x;
+            mask-repeat: repeat-x;
+            -webkit-mask-size: 20px 16px;
+            mask-size: 20px 16px;
+            -webkit-mask-position: top left;
+            mask-position: top left;
+        }
+
+        .logo-ring {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto;
+            border-radius: 50%;
+            padding: 4px;
+            background: var(--ink);
+        }
+
+        .logo-ring .inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-ring img {
+            width: 56%;
+            height: 56%;
+            object-fit: contain;
+        }
+
+        .brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: .3px;
+            margin: 16px 0 3px;
+            color: var(--ink);
+        }
+
+        .brand-sub {
+            font-size: .82rem;
+            font-style: italic;
+            color: var(--ink-soft);
+            letter-spacing: .2px;
+            margin-bottom: 26px;
+        }
+
+        /* ── Divisor tipo perforado ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .divider span {
+            flex: 1;
+            height: 0;
+            border-top: 1.5px dashed var(--line);
+        }
+
+        .divider i {
+            font-style: normal;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .66rem;
+            font-weight: 500;
+            color: var(--accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ── Bloque de datos ── */
+        .data-block {
+            text-align: left;
+            margin-bottom: 26px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 14px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--line);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .row:first-child {
+            padding-top: 0;
+        }
+
+        .row--full {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .label {
+            font-size: .68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+
+        .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .88rem;
+            font-weight: 700;
+            color: var(--ink);
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .row--full .value {
+            text-align: left;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        /* ── Botón CTA ── */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--ink);
+            color: var(--card);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: .95rem;
+            font-weight: 700;
+            letter-spacing: .3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity .2s, transform .15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            opacity: .86;
+            transform: scale(.98);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .btn svg {
+            flex-shrink: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .btn {
+                transition: none;
+            }
+
+            .btn:active {
+                transform: none;
+            }
+        }
+
+        /* ── Código decorativo tipo boleta ── */
+        .barcode-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 28px;
+            color: var(--line);
+        }
+
+        .barcode {
+            height: 24px;
+            width: auto;
+        }
+
+        .footnote {
+            margin-top: 16px;
+            font-size: .72rem;
+            color: var(--ink-soft);
+            line-height: 1.6;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--ink);
+            color: var(--card);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: .85rem;
+            font-weight: 600;
+            letter-spacing: .2px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s, transform .3s;
+            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .3);
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width:380px) {
+            .card {
+                padding: 30px 20px 24px;
+            }
+
+            .brand {
+                font-size: 1.32rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calibration" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="ticket">
+        <div class="card" id="card">
+
+            <div class="logo-ring">
+                <div class="inner">
+                    <img src="img/logo-icono.png" alt="Copy & Coffee">
+                </div>
+            </div>
+
+            <h1 class="brand">Copy &amp; Coffee</h1>
+            <p class="brand-sub">Centro de fotocopiado y Más…</p>
+
+            <div class="divider">
+                <span></span>
+                <i>Datos de Transferencia</i>
+                <span></span>
+            </div>
+
+            <div class="data-block">
+                <div class="row row--full">
+                    <span class="label">Nombre / Razón social</span>
+                    <span class="value">Centro de Fotocopiado y Bazar Álvaro Ramírez Pozo E.I.R.L.</span>
+                </div>
+                <div class="row">
+                    <span class="label">Banco</span>
+                    <span class="value">Scotiabank · Desarrollo</span>
+                </div>
+                <div class="row">
+                    <span class="label">Cuenta</span>
+                    <span class="value">Cuenta Corriente</span>
+                </div>
+                <div class="row">
+                    <span class="label">N° cuenta</span>
+                    <span class="value">993 165 239</span>
+                </div>
+                <div class="row">
+                    <span class="label">RUT</span>
+                    <span class="value">78.289.492-7</span>
+                </div>
+                <div class="row">
+                    <span class="label">Correo</span>
+                    <span class="value">copyandcoffee550a@gmail.com</span>
+                </div>
+            </div>
+
+            <button class="btn" onclick="copiar()">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                Copiar datos de transferencia
+            </button>
+
+            <div class="barcode-wrap">
+                <svg class="barcode" viewBox="0 0 234 28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="0" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="3" y="0" width="3" height="28" fill="currentColor" />
+                    <rect x="9" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="14" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="17" y="0" width="4" height="28" fill="currentColor" />
+                    <rect x="23" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="26" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="31" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="35" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="40" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="46" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="52" y="0" width="3" height="28" fill="currentColor" />
+                    <rect x="57" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="63" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="66" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="71" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="74" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="79" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="82" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="85" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="90" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="94" y="0" width="4" height="28" fill="currentColor" />
+                    <rect x="100" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="104" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="108" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="111" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="115" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="119" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="124" y="0" width="3" height="28" fill="currentColor" />
+                    <rect x="131" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="135" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="138" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="142" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="146" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="151" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="157" y="0" width="4" height="28" fill="currentColor" />
+                    <rect x="163" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="168" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="171" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="175" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="180" y="0" width="3" height="28" fill="currentColor" />
+                    <rect x="185" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="189" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="195" y="0" width="4" height="28" fill="currentColor" />
+                    <rect x="203" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="207" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="212" y="0" width="2" height="28" fill="currentColor" />
+                    <rect x="216" y="0" width="4" height="28" fill="currentColor" />
+                    <rect x="224" y="0" width="1" height="28" fill="currentColor" />
+                    <rect x="228" y="0" width="2" height="28" fill="currentColor" />
+                </svg>
+            </div>
+
+            <p class="footnote">Incluye tu nombre en el comentario de la transferencia.<br>¡Gracias por tu preferencia!
+                ☕</p>
+        </div>
+        <div class="card-tear" aria-hidden="true"></div>
+    </div>
+
+    <div class="toast" id="toast">✓ ¡Datos copiados con éxito!</div>
+
+    <script>
+        const datos = `Nombre / Razón social: Centro de Fotocopiado y Bazar Álvaro Ramírez Pozo E.I.R.L.
+Banco: Scotiabank - Desarrollo
+Tipo de cuenta: Cuenta Corriente
+Número de cuenta: 993165239
+RUT: 78.289.492-7
+Correo: copyandcoffee550a@gmail.com`;
+
+        function copiar() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(datos).then(mostrarToast).catch(fallback);
+            } else {
+                fallback();
+            }
+        }
+
+        function fallback() {
+            const ta = document.createElement('textarea');
+            ta.value = datos;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus(); ta.select();
+            try { document.execCommand('copy'); mostrarToast(); } catch (e) { alert(datos); }
+            document.body.removeChild(ta);
+        }
+
+        function mostrarToast() {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+    </script>
+</body>
+
+</html>
